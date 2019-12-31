@@ -1,8 +1,7 @@
-package org.musical_pursuit.services.src.FactoryPackage;
-
-import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
+package com.example.dbcourse.Musical_Pursuit.backend.FactoryPackage;
 
 import java.util.Random;
+import com.example.dbcourse.Musical_Pursuit.backend.PlayCardPackage.IPlayCard;
 
 public class MultipleChoicePlayCardQuestionFactory implements IPlayCardFactory{
 

@@ -1,4 +1,4 @@
-package org.musical_pursuit.services.src.PlayCardPackage;
+package com.example.dbcourse.Musical_Pursuit.backend.PlayCardPackage;
 
 public class MultipleChoicePlayCard implements IPlayCard{
 

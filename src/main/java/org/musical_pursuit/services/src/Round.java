@@ -1,6 +1,6 @@
-package org.musical_pursuit.services.src;
+package com.example.dbcourse.Musical_Pursuit.backend;
 
-import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
+import com.example.dbcourse.Musical_Pursuit.backend.PlayCardPackage.IPlayCard;
 
 import java.util.Iterator;
 
