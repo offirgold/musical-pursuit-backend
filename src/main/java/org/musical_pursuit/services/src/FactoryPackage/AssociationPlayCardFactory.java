@@ -1,7 +1,7 @@
-package com.example.dbcourse.Musical_Pursuit.backend.FactoryPackage;
+package org.musical_pursuit.services.src.FactoryPackage;
 
 import java.util.HashMap;
-import com.example.dbcourse.Musical_Pursuit.backend.PlayCardPackage.IPlayCard;
+import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
 
 public class AssociationPlayCardFactory implements IPlayCardFactory{
 
