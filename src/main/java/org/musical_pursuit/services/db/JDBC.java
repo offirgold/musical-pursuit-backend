@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
-import com.example.dbcourse.Musical_Pursuit.backend.objects.Song;
+import org.musical_pursuit.services.objects.Song;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
 
