@@ -1,4 +1,4 @@
-package com.example.dbcourse.Musical_Pursuit.backend.objects;
+package org.musical_pursuit.services.src.objects;
 
 class Album {
     private String albumID;
