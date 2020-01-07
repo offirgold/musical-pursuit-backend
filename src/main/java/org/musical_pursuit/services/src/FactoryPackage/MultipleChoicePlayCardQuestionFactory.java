@@ -1,9 +1,19 @@
 package org.musical_pursuit.services.src.FactoryPackage;
 
 import java.util.Random;
+
+import org.musical_pursuit.services.db.JDBC;
 import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
 
 public class MultipleChoicePlayCardQuestionFactory implements IPlayCardFactory{
+
+    JDBC jdbc;
+
+
+    public MultipleChoicePlayCardQuestionFactory(JDBC jdbc) {
+        this.jdbc = jdbc;
+    }
+
 
     @Override
     public IPlayCard CreatePlayCard() {
@@ -12,14 +22,20 @@ public class MultipleChoicePlayCardQuestionFactory implements IPlayCardFactory{
         receive a row. Let's call the object type that contains the data Row and the specific instance trueRows. These
         "trueRows" object will contain the year, the name of the song/album/artist that are asked about.*/
 
+//        HashMap<Integer, List< Song >> answers =  jdbc.getSongsDtl(0, 8, 8);
+
+        //Song correctSong = answers.get(0).get(0);
+        //List<Song> correctSongs = answers.get(0);
+        //List<Song> incorrectSongs = answers.get(1);
+
         String question;
         String[] correctAnswers = new String[8];
         String[] incorrectAnswers = new String[8];
 
-//        question = "Pick the songs that " + String.valueOf(row.artist) + " has released.";
+//        question = "Pick the songs that " + String.valueOf(correctSong.getArtist().getArtistName()) + " has released.";
 
 //        for (int i = 0; i < correctAnswers.length; ++i) {
-//            correctAnswers[i] = trueRows[i].song;
+//            correctAnswers[i] = correctSongs.get(i).getTitle();
 //        }
 
         /* Calling a function that uses the "context" array to build a query to send to the local database and
@@ -27,10 +43,10 @@ public class MultipleChoicePlayCardQuestionFactory implements IPlayCardFactory{
         the song/album/artist that are used as the incorrect answers.*/
 
 //        for (int i = 0; i < incorrectAnswers.length; ++i) {
-//            incorrectAnswers[i] = falseRows[i].song;
+//            incorrectAnswers[i] = incorrectSongs.get(i).getTitle();
 //        }
 
-//        return new SingleAnswerPlayCard(question, correctAnswer, incorrectAnswers);
+//        return new MultipleChoicePlayCard(question, correctAnswers, incorrectAnswers);
 
         return null;
     }
