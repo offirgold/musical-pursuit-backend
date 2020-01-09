@@ -5,12 +5,12 @@ import java.util.Random;
 import org.musical_pursuit.services.db.JDBC;
 import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
 
-public class MultipleChoicePlayCardQuestionFactory implements IPlayCardFactory{
+public class MultipleChoicePlayCardFactory implements IPlayCardFactory{
 
     JDBC jdbc;
 
 
-    public MultipleChoicePlayCardQuestionFactory(JDBC jdbc) {
+    public MultipleChoicePlayCardFactory(JDBC jdbc) {
         this.jdbc = jdbc;
     }
 

@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 
-public class SingleAnswerQuestionPlayCardFactory implements IPlayCardFactory{
+public class SingleAnswerPlayCardFactory implements IPlayCardFactory{
 
     JDBC jdbc;
 
 
-    public SingleAnswerQuestionPlayCardFactory(JDBC jdbc) {
+    public SingleAnswerPlayCardFactory(JDBC jdbc) {
         this.jdbc = jdbc;
     }
 
