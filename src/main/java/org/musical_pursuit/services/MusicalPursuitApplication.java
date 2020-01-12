@@ -20,22 +20,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Path("/pursuit")
 public class MusicalPursuitApplication {
 
-    JDBC jdbc;
-    SingleAnswerPlayCardFactory singleAnswerPlayCardFactory;
-    MultipleChoicePlayCardFactory multipleChoicePlayCardFactory;
-    AssociationPlayCardFactory associationPlayCardFactory;
+    JDBC jdbc = new JDBC();
+    SingleAnswerPlayCardFactory singleAnswerPlayCardFactory = new SingleAnswerPlayCardFactory(jdbc);
+    MultipleChoicePlayCardFactory multipleChoicePlayCardFactory = new MultipleChoicePlayCardFactory(jdbc);
+    AssociationPlayCardFactory associationPlayCardFactory = new AssociationPlayCardFactory(jdbc);
 
 
     @Path("/MainMenu")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String returnVoid() {
-        this.jdbc = new JDBC();
-        this.singleAnswerPlayCardFactory = new SingleAnswerPlayCardFactory(jdbc);
-        this.multipleChoicePlayCardFactory = new MultipleChoicePlayCardFactory(jdbc);
-        this.associationPlayCardFactory = new AssociationPlayCardFactory(jdbc);
+    public String mainMenu() {
         return null;
     }
+
+
+//  Used for testing.
+//    @Path("/MainMenu2")
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String returnVoid() {
+//        int x = 7;
+//        return null;
+//    }
 
 
     @GET
@@ -49,7 +55,7 @@ public class MusicalPursuitApplication {
         if (1 <= level && level <= 3) {
             newPlaycard = singleAnswerPlayCardFactory.CreatePlayCard();
         } else if (4 <= level && level <= 6) {
-            newPlaycard = singleAnswerPlayCardFactory.CreatePlayCard();
+            newPlaycard = multipleChoicePlayCardFactory.CreatePlayCard();
         } else if(level == 7) {
             newPlaycard = associationPlayCardFactory.CreatePlayCard();
         } else {
