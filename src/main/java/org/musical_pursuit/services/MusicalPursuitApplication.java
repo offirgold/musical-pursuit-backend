@@ -1,25 +1,29 @@
 package org.musical_pursuit.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.musical_pursuit.services.db.JDBC;
 import org.musical_pursuit.services.src.FactoryPackage.AssociationPlayCardFactory;
 import org.musical_pursuit.services.src.FactoryPackage.MultipleChoicePlayCardFactory;
 import org.musical_pursuit.services.src.FactoryPackage.SingleAnswerPlayCardFactory;
+
 import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.musical_pursuit.services.src.PlayCardPackage.SingleAnswerPlayCard;
 
 
 @Path("/pursuit")
 public class MusicalPursuitApplication {
 
+    int SingleAnswerCardAmount = 3, MultipleAnswerCardAmount = 3, AssociationCardAmount = 1;
+    int gameLength = SingleAnswerCardAmount + MultipleAnswerCardAmount + AssociationCardAmount;
     JDBC jdbc = new JDBC();
     SingleAnswerPlayCardFactory singleAnswerPlayCardFactory = new SingleAnswerPlayCardFactory(jdbc);
     MultipleChoicePlayCardFactory multipleChoicePlayCardFactory = new MultipleChoicePlayCardFactory(jdbc);
@@ -45,35 +49,79 @@ public class MusicalPursuitApplication {
 
 
     @GET
-    @Path("{level}")
+    @Path("/Play")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPlayCard(@PathParam("level") int level) {
+    public Response getFullGame() {
 
+        int levelIndex = 0;
         ObjectMapper mapper = new ObjectMapper();
-        IPlayCard newPlaycard;
+        IPlayCard[] fullGame = new IPlayCard[gameLength];
+        JSONObject finalJson = new JSONObject();
 
-        if (1 <= level && level <= 3) {
-            newPlaycard = singleAnswerPlayCardFactory.CreatePlayCard();
-        } else if (4 <= level && level <= 6) {
-            newPlaycard = multipleChoicePlayCardFactory.CreatePlayCard();
-        } else if(level == 7) {
-            newPlaycard = associationPlayCardFactory.CreatePlayCard();
-        } else {
-            newPlaycard = null;
+        for(int i = 0; i < SingleAnswerCardAmount; ++i) {
+            fullGame[levelIndex] = singleAnswerPlayCardFactory.CreatePlayCard();
+            ++levelIndex;
         }
 
-        String json = null;
+        for(int i = 0; i < MultipleAnswerCardAmount; ++i) {
+            fullGame[levelIndex] = multipleChoicePlayCardFactory.CreatePlayCard();
+            ++levelIndex;
+        }
 
-        try {
-            json = mapper.writeValueAsString(newPlaycard);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        for(int i = 0; i < AssociationCardAmount; ++i) {
+            fullGame[levelIndex] = associationPlayCardFactory.CreatePlayCard();
+            ++levelIndex;
+        }
+
+//        String[] y = {"Alive & Amplified", "Permanent", "Dance Dance"};
+//        IPlayCard x = new SingleAnswerPlayCard("In 000000, Billy Talent release the song ______.", "Red Flag",
+//                y);
+//
+//        for(int i = 0; i < gameLength; ++i) {
+//            fullGame[i] = x;
+//        }
+
+        for (int i = 0; i < gameLength; ++i) {
+            try {
+                finalJson.put("level " + (i + 1), mapper.writeValueAsString(fullGame[i]));
+                System.out.println(finalJson);
+            } catch (Exception e) {
+                System.out.println("problem casting to JSONObject in iteration " + i);
+            }
         }
 
         return Response
                 .status(Response.Status.OK)
-                .entity(json)
+                .entity(finalJson)
                 .build();
+
+//        String[] y = {"Alive & Amplified", "Permanent", "Dance Dance"};
+//        IPlayCard x = new SingleAnswerPlayCard("In 000000, Billy Talent release the song ______.", "Red Flag",
+//                y);
+//
+//        fullGame[0] = x;
+//        fullGame[1] = x;
+//
+//        try {
+//            finalJson.put("level 1", mapper.writeValueAsString(x));
+//            finalJson.put("level 2", mapper.writeValueAsString(x));
+//            System.out.println(finalJson);
+//        } catch (Exception e) {
+//            System.out.println("here");
+//        }
+
+//        String json = null;
+//
+//        try {
+//            json = mapper.writeValueAsString(newPlaycard);
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return Response
+//                .status(Response.Status.OK)
+//                .entity(json)
+//                .build();
     }
 
 
