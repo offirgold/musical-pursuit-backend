@@ -18,6 +18,8 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.musical_pursuit.services.src.PlayCardPackage.SingleAnswerPlayCard;
 
+import java.util.Arrays;
+
 
 @Path("/pursuit")
 public class MusicalPursuitApplication {
@@ -50,7 +52,8 @@ public class MusicalPursuitApplication {
 
     @GET
     @Path("/Play")
-    @Produces(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     public Response getFullGame() {
 
         int levelIndex = 0;
@@ -58,41 +61,58 @@ public class MusicalPursuitApplication {
         IPlayCard[] fullGame = new IPlayCard[gameLength];
         JSONObject finalJson = new JSONObject();
 
-        for(int i = 0; i < SingleAnswerCardAmount; ++i) {
-            fullGame[levelIndex] = singleAnswerPlayCardFactory.CreatePlayCard();
-            ++levelIndex;
-        }
-
-        for(int i = 0; i < MultipleAnswerCardAmount; ++i) {
-            fullGame[levelIndex] = multipleChoicePlayCardFactory.CreatePlayCard();
-            ++levelIndex;
-        }
-
-        for(int i = 0; i < AssociationCardAmount; ++i) {
-            fullGame[levelIndex] = associationPlayCardFactory.CreatePlayCard();
-            ++levelIndex;
-        }
-
-//        String[] y = {"Alive & Amplified", "Permanent", "Dance Dance"};
-//        IPlayCard x = new SingleAnswerPlayCard("In 000000, Billy Talent release the song ______.", "Red Flag",
-//                y);
+//        for(int i = 0; i < SingleAnswerCardAmount; ++i) {
+//            fullGame[levelIndex] = singleAnswerPlayCardFactory.CreatePlayCard();
+//            ++levelIndex;
+//        }
 //
-//        for(int i = 0; i < gameLength; ++i) {
-//            fullGame[i] = x;
+//        for(int i = 0; i < MultipleAnswerCardAmount; ++i) {
+//            fullGame[levelIndex] = multipleChoicePlayCardFactory.CreatePlayCard();
+//            ++levelIndex;
+//        }
+//
+//        for(int i = 0; i < AssociationCardAmount; ++i) {
+//            fullGame[levelIndex] = associationPlayCardFactory.CreatePlayCard();
+//            ++levelIndex;
+//        }
+//
+//        for (int i = 0; i < gameLength; ++i) {
+//            try {
+//                finalJson.put("level " + (i + 1), mapper.writeValueAsString(fullGame[i]));
+//                System.out.println(finalJson);
+//            } catch (Exception e) {
+//                System.out.println("problem casting to JSONObject in iteration " + i);
+//            }
 //        }
 
-        for (int i = 0; i < gameLength; ++i) {
+        IPlayCard[] fullGame2 = new IPlayCard[gameLength];
+        String[] result = new String[2];
+
+        String[] y1 = {"Alive & Amplified", "Permanent", "Dance Dance"};
+        IPlayCard x1 = new SingleAnswerPlayCard("In 000000, Billy Talent release the song ______.", "Red Flag",
+                y1);
+        String[] y2 = {"Sick Boy", "Radioactive", "Young Blood"};
+        IPlayCard x2 = new SingleAnswerPlayCard("In 111111, Foster the People release the song ______.", "Houdini",
+                y2);
+
+        fullGame2[0] = x1;
+        fullGame2[1] = x2;
+
+        for (int i = 0; i < 2; ++i) {
             try {
-                finalJson.put("level " + (i + 1), mapper.writeValueAsString(fullGame[i]));
-                System.out.println(finalJson);
+                result[i] = mapper.writeValueAsString(fullGame2[i]);
+                finalJson.put("level " + (i + 1), mapper.writeValueAsString(fullGame2[i]));
+//                System.out.println(mapper.writeValueAsString(fullGame2[i]));
             } catch (Exception e) {
                 System.out.println("problem casting to JSONObject in iteration " + i);
             }
         }
+//        System.out.println(finalJson);
+        System.out.println(Arrays.toString(result));
 
         return Response
                 .status(Response.Status.OK)
-                .entity(finalJson)
+                .entity(Arrays.toString(result))
                 .build();
 
 //        String[] y = {"Alive & Amplified", "Permanent", "Dance Dance"};
