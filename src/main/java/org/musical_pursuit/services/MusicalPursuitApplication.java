@@ -88,10 +88,10 @@ public class MusicalPursuitApplication {
         IPlayCard[] fullGame2 = new IPlayCard[gameLength];
         String[] result = new String[2];
 
-        String[] y1 = {"Alive & Amplified", "Permanent", "Dance Dance"};
+        String[] y1 = {"Alive & Amplified", "Permanent", "Dance Dance", "Red Flag"};
         IPlayCard x1 = new SingleAnswerPlayCard("In 000000, Billy Talent release the song ______.", "Red Flag",
                 y1);
-        String[] y2 = {"Sick Boy", "Radioactive", "Young Blood"};
+        String[] y2 = {"Sick Boy", "Radioactive", "Young Blood", "Houdini"};
         IPlayCard x2 = new SingleAnswerPlayCard("In 111111, Foster the People release the song ______.", "Houdini",
                 y2);
 
