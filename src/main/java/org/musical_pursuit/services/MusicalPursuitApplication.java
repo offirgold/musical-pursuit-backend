@@ -1,7 +1,6 @@
 package org.musical_pursuit.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.musical_pursuit.services.db.JDBC;
 import org.musical_pursuit.services.src.FactoryPackage.AssociationPlayCardFactory;
 import org.musical_pursuit.services.src.FactoryPackage.MultipleChoicePlayCardFactory;
@@ -12,10 +11,8 @@ import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.musical_pursuit.services.src.PlayCardPackage.SingleAnswerPlayCard;
 
 import java.util.Arrays;
@@ -24,20 +21,20 @@ import java.util.Arrays;
 @Path("/pursuit")
 public class MusicalPursuitApplication {
 
-    int SingleAnswerCardAmount = 3, MultipleAnswerCardAmount = 3, AssociationCardAmount = 1;
-    int gameLength = SingleAnswerCardAmount + MultipleAnswerCardAmount + AssociationCardAmount;
+    int singleAnswerCardAmount = 3, multipleAnswerCardAmount = 3, associationCardAmount = 1;
+    int gameLength = singleAnswerCardAmount + multipleAnswerCardAmount + associationCardAmount;
     JDBC jdbc = new JDBC();
     SingleAnswerPlayCardFactory singleAnswerPlayCardFactory = new SingleAnswerPlayCardFactory(jdbc);
     MultipleChoicePlayCardFactory multipleChoicePlayCardFactory = new MultipleChoicePlayCardFactory(jdbc);
     AssociationPlayCardFactory associationPlayCardFactory = new AssociationPlayCardFactory(jdbc);
 
 
-    @Path("/MainMenu")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String mainMenu() {
-        return null;
-    }
+//    @Path("/MainMenu")
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String mainMenu() {
+//        return null;
+//    }
 
 
 //  Used for testing.
@@ -47,6 +44,48 @@ public class MusicalPursuitApplication {
 //    public String returnVoid() {
 //        int x = 7;
 //        return null;
+//    }
+
+    public IPlayCard[] mergeArrays(IPlayCard[] arr1, IPlayCard[] arr2) {
+
+        int index = 0;
+        IPlayCard[] merged = new IPlayCard[singleAnswerCardAmount + multipleAnswerCardAmount];
+
+        for (IPlayCard iPlayCard : arr1) {
+            merged[index] = iPlayCard;
+            ++index;
+        }
+
+        for (IPlayCard iPlayCard : arr2) {
+            merged[index] = iPlayCard;
+            ++index;
+        }
+
+        return merged;
+    }
+
+
+//    public IPlayCard[] mergeArrays(IPlayCard[] arr1, IPlayCard[] arr2, IPlayCard[] arr3) {
+//
+//        int index = 0;
+//        IPlayCard[] merged = new IPlayCard[gameLength];
+//
+//        for(IPlayCard iPlayCard: arr1) {
+//            merged[index] = iPlayCard;
+//            ++index;
+//        }
+//
+//        for(IPlayCard iPlayCard: arr2) {
+//            merged[index] = iPlayCard;
+//            ++index;
+//        }
+//
+//        for(IPlayCard iPlayCard: arr3) {
+//            merged[index] = iPlayCard;
+//            ++index;
+//        }
+//
+//        return merged;
 //    }
 
 
@@ -59,34 +98,53 @@ public class MusicalPursuitApplication {
         int levelIndex = 0;
         ObjectMapper mapper = new ObjectMapper();
         IPlayCard[] fullGame = new IPlayCard[gameLength];
-        JSONObject finalJson = new JSONObject();
-
+        String[] result = new String[gameLength];
+//
+////        IPlayCard[] singleArray = new IPlayCard[SingleAnswerCardAmount];
+////        IPlayCard[] multipleArray = new IPlayCard[MultipleAnswerCardAmount];
+////        IPlayCard[] associationArray = new IPlayCard[AssociationCardAmount];
+////        ExecutorService executor = Executors.newFixedThreadPool(gameLength);
+//
 //        for(int i = 0; i < SingleAnswerCardAmount; ++i) {
+////            Callable<IPlayCard> thread = new MyThread(singleAnswerPlayCardFactory);
+////            singleArray[i] = executor.submit(thread);
 //            fullGame[levelIndex] = singleAnswerPlayCardFactory.CreatePlayCard();
 //            ++levelIndex;
 //        }
 //
 //        for(int i = 0; i < MultipleAnswerCardAmount; ++i) {
+////            Callable<IPlayCard> thread = new MyThread(multipleChoicePlayCardFactory);
+////            multipleArray[i] = executor.submit(thread);
 //            fullGame[levelIndex] = multipleChoicePlayCardFactory.CreatePlayCard();
 //            ++levelIndex;
 //        }
 //
 //        for(int i = 0; i < AssociationCardAmount; ++i) {
+////            Callable<IPlayCard> thread = new MyThread(associationPlayCardFactory);
+////            associationArray[i] = executor.submit(thread);
 //            fullGame[levelIndex] = associationPlayCardFactory.CreatePlayCard();
 //            ++levelIndex;
 //        }
 //
+////        fullGame = mergeArrays(singleArray, multipleArray, associationArray)
+//
 //        for (int i = 0; i < gameLength; ++i) {
 //            try {
-//                finalJson.put("level " + (i + 1), mapper.writeValueAsString(fullGame[i]));
-//                System.out.println(finalJson);
+//                result[i] = mapper.writeValueAsString(fullGame[i]);
 //            } catch (Exception e) {
-//                System.out.println("problem casting to JSONObject in iteration " + i);
+//                System.out.println("problem in making the String array in iteration " + i);
 //            }
 //        }
+//
+//        executor.shutdown();
+//
+//        return Response
+//                .status(Response.Status.OK)
+//                .entity(Arrays.toString(result))
+//                .build();
 
         IPlayCard[] fullGame2 = new IPlayCard[gameLength];
-        String[] result = new String[2];
+        String[] result2 = new String[2];
 
         String[] y1 = {"Alive & Amplified", "Permanent", "Dance Dance", "Red Flag"};
         IPlayCard x1 = new SingleAnswerPlayCard("In 000000, Billy Talent release the song ______.", "Red Flag",
@@ -100,48 +158,16 @@ public class MusicalPursuitApplication {
 
         for (int i = 0; i < 2; ++i) {
             try {
-                result[i] = mapper.writeValueAsString(fullGame2[i]);
-                finalJson.put("level " + (i + 1), mapper.writeValueAsString(fullGame2[i]));
-//                System.out.println(mapper.writeValueAsString(fullGame2[i]));
+                result2[i] = mapper.writeValueAsString(fullGame2[i]);
             } catch (Exception e) {
                 System.out.println("problem casting to JSONObject in iteration " + i);
             }
         }
-//        System.out.println(finalJson);
-        System.out.println(Arrays.toString(result));
 
         return Response
                 .status(Response.Status.OK)
-                .entity(Arrays.toString(result))
+                .entity(Arrays.toString(result2))
                 .build();
-
-//        String[] y = {"Alive & Amplified", "Permanent", "Dance Dance"};
-//        IPlayCard x = new SingleAnswerPlayCard("In 000000, Billy Talent release the song ______.", "Red Flag",
-//                y);
-//
-//        fullGame[0] = x;
-//        fullGame[1] = x;
-//
-//        try {
-//            finalJson.put("level 1", mapper.writeValueAsString(x));
-//            finalJson.put("level 2", mapper.writeValueAsString(x));
-//            System.out.println(finalJson);
-//        } catch (Exception e) {
-//            System.out.println("here");
-//        }
-
-//        String json = null;
-//
-//        try {
-//            json = mapper.writeValueAsString(newPlaycard);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return Response
-//                .status(Response.Status.OK)
-//                .entity(json)
-//                .build();
     }
 
 
@@ -155,56 +181,6 @@ public class MusicalPursuitApplication {
 ////                y);
 //
 //        IPlayCard newPlaycard = singleAnswerPlayCardFactory.CreatePlayCard();
-//        String json = null;
-//
-//        try {
-//            json = mapper.writeValueAsString(newPlaycard);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return Response
-//                .status(Response.Status.OK)
-//                .entity(json)
-//                .build();
-//    }
-//
-//
-//    @Path("/1")
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response returnJson_2() {
-//        ObjectMapper mapper = new ObjectMapper();
-////        String[] y = {"Alive & Amplified", "Permanent", "Dance Dance"};
-////        SingleAnswerPlayCard x = new SingleAnswerPlayCard("In 111111, Billy Talent release the song ______.", "Red Flag",
-////                y);
-//
-//        IPlayCard newPlaycard = multipleChoicePlayCardFactory.CreatePlayCard();
-//        String json = null;
-//
-//        try {
-//            json = mapper.writeValueAsString(newPlaycard);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return Response
-//                .status(Response.Status.OK)
-//                .entity(json)
-//                .build();
-//    }
-//
-//
-//    @Path("/2")
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response returnJson_3() {
-//        ObjectMapper mapper = new ObjectMapper();
-////        String[] y = {"Alive & Amplified", "Permanent", "Dance Dance"};
-////        SingleAnswerPlayCard x = new SingleAnswerPlayCard("In 222222, Billy Talent release the song ______.", "Red Flag",
-////                y);
-//
-//        IPlayCard newPlaycard = associationPlayCardFactory.CreatePlayCard();
 //        String json = null;
 //
 //        try {
