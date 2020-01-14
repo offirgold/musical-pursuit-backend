@@ -18,7 +18,7 @@ public class MultipleChoicePlayCardFactory implements IPlayCardFactory{
     @Override
     public IPlayCard CreatePlayCard() {
 
-//        HashMap<Integer, List< Song >> answers =  jdbc.getSongsDtl(0, correctAnswersNum, incorrectAnswersNum);
+//        HashMap<Integer, List< Song >> answers =  jdbc.getSongsDtl(correctAnswersNum, incorrectAnswersNum);
 
         //Song correctSong = answers.get(0).get(0);
         //List<Song> correctSongs = answers.get(0);
