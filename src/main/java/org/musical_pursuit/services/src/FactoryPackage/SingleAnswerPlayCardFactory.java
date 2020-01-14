@@ -28,7 +28,7 @@ public class SingleAnswerPlayCardFactory implements IPlayCardFactory{
 
         int about =  randomizer.nextInt(2);
 
-//        HashMap<Integer, List< Song >> answers =  jdbc.getSongsDtl(0, 1, 3);
+//        HashMap<Integer, List< Song >> answers =  jdbc.getSongsDtl(0, 1, totalOptionsNum - 1);
 
         String question;
 //        String correctAnswer;
