@@ -2,11 +2,13 @@ package org.musical_pursuit.services.db;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
 import org.musical_pursuit.services.src.objects.Song;
+import org.musical_pursuit.services.src.objects.Artist;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
 
@@ -24,6 +26,8 @@ public class JDBC {
      */
     public JDBC() {
         this.conn = null;
+        //open connection on cunstruction
+        this.openConnection("/Users/AmitAshkenazi/IdeaProjects/musical-pursuit-backend/src/main/resources/application.properties");
     }
 
     /**
@@ -60,8 +64,9 @@ public class JDBC {
         }
 
         try {
+//            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
             conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + schema
-                    + "?serverTimezone=UTC", user, password);
+                    /*+ "?serverTimezone=UTC"*/, user, password);
         } catch (SQLException e) {
             System.out.println("Unable to connect - " + e.getMessage());
             return null;
@@ -87,29 +92,13 @@ public class JDBC {
 
     public void fillDBfromCSV(String csvFileName) throws IOException, SqlToolError {
 
-        int result;
-
-        //TODO: open csv file
-//        try {
-//
-//            CSVLoader loader = new CSVLoader(getCon());
-//
-//            loader.loadCSV("C:\\employee.sql", "CUSTOMER", true);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        //TODO: genereate musical_db_creator.sql
-
-        //TODO: insert with SQL queries all details from csv to db here:
-        try (Statement stmt = conn.createStatement();) {
-            result = stmt.executeUpdate("INSERT INTO (fname, lname) " + "VALUES('Emma','Stone')");
-            result = stmt.executeUpdate("INSERT INTO demo(fname, lname) " + "VALUES('Ryan','Gosling')");
-            // result = stmt.executeUpdate("DELETE FROM demo");
-            System.out.println("Success - executeUpdate, result = " + result);
-
+        SqlFile sf = new SqlFile(new File(
+                "src/main/java/com/example/dbcourse/Musical_Pursuit/db/musical_db_inserts.sql"));
+        sf.setConnection(conn);
+        try {
+            sf.execute();
         } catch (SQLException e) {
-            System.out.println("ERROR executeUpdate - " + e.getMessage());
+            e.getMessage();
         }
     }
 
@@ -121,21 +110,116 @@ public class JDBC {
      * @return: HashMap with list of right answers as song objects (and key 1 e.g.)
      *  and list of wrong answers as song objects (and key 0 e.g.)
      */
-    public HashMap<Integer, List<Song>> getSongsDtl(int context, int about, int correctAmount, int wrongAmount ) {
+    public HashMap<Integer, List<Song>> getSongsDtl(int correctAmount, int wrongAmount) {
 
-        // Question: Which band composed the song "yesterday"?
-        // context = song name = "yesterday"
-        // about = band = "beatles"
+        HashMap<Integer, List<Song>> answers = new HashMap<>();
+        List<Song> right = new ArrayList<>();
+        List<Song> wrong = new ArrayList<>();
+        String corr = Integer.toString(correctAmount);
+        String wron = Integer.toString(wrongAmount);
+        String artist_id, title, song_id, getRightAns, getWrongAns, artist_name = null;
+        int year;
+        ResultSet rs, rs1;
+        StringBuilder notRightOnes = new StringBuilder();
 
-        return null;
-    }
+        //create statement
+        try {
+            Statement stmt = this.conn.createStatement();
 
-    /*
-     * @return: List of 30 songs of 2 different bands
-     */
-    public List<Song> getBandSongs() {
+            //get right answers
+            try {
+                //Statement stmt = this.conn.createStatement();
 
-        return null;
+                for (int i = 0; i < correctAmount; i++) {
+                    //clear db by dropping schema and creating again the db
+                    getRightAns = "SELECT * " +
+                            "FROM  `songs` " +
+                            "ORDER BY RAND() " +
+                            "LIMIT 1";
+
+                    rs = stmt.executeQuery(getRightAns);
+
+                    if (rs.next()) {
+                        song_id = rs.getString("song_id");
+                        year = rs.getInt("year");
+                        title = rs.getString("title");
+                        artist_id = rs.getString("artist_id");
+
+                        getRightAns = "SELECT  `name` " +
+                                "FROM  `artists` " +
+                                "WHERE `id`='" + artist_id + "'";
+                        rs1 = stmt.executeQuery(getRightAns);
+
+                        if (rs1.next()) {
+                            artist_name = rs1.getString("name");
+                        }
+
+                        right.add(new Song(song_id, title, year, new Artist(artist_id, artist_name)));
+                    }
+                }
+
+                //add to HashMap right answers
+                answers.put(0, right);
+
+            } catch (SQLException se) {
+                //Handle errors for JDBC
+                se.printStackTrace();
+            }
+
+            //get wrong ones
+            try {
+                notRightOnes.append("`title`= '" + right.get(0).getTitle() + "'");
+
+                //Statement stmt = this.conn.createStatement();
+                for (int n = 1; n < right.size(); n++) {
+                    title = (right.get(n).getTitle());
+                    notRightOnes.append(" OR `title`= '" + title + "'");
+                }
+
+                for (int j = 0; j < wrongAmount; j++) {
+                    //clear db by dropping schema and creating again the db
+                    getWrongAns = "SELECT * " +
+                            "FROM  `songs` " +
+                            "WHERE NOT (" + notRightOnes + ") " +
+                            "ORDER BY RAND() " +
+                            "LIMIT 1";
+
+                    rs = stmt.executeQuery(getWrongAns);
+
+                    if (rs.next()) {
+                        song_id = rs.getString("song_id");
+                        year = rs.getInt("year");
+                        title = rs.getString("title");
+                        artist_id = rs.getString("artist_id");
+
+                        getWrongAns = "SELECT  `name` " +
+                                "FROM  `artists` " +
+                                "WHERE `id`='" + artist_id + "'";
+                        rs1 = stmt.executeQuery(getWrongAns);
+
+                        if (rs1.next()) {
+                            artist_name = rs1.getString("name");
+                        }
+
+                        wrong.add(new Song(song_id, title, year, new Artist(artist_id, artist_name)));
+                    }
+                }
+
+                //add to HashMap wrong answers
+                answers.put(1, wrong);
+
+            } catch (SQLException se) {
+                //Handle errors for JDBC
+                se.printStackTrace();
+            }
+
+            //catch of failed create statement
+        } catch (NullPointerException | SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }
+
+        return answers;
     }
 
     /**
@@ -147,10 +231,10 @@ public class JDBC {
             Statement stmt = this.conn.createStatement();
 
             //clear db by dropping schema and creating again the db
-            String drop = "DROP SCHEMA IF EXISTS `musical_pursuit_db`";
+            String drop = "DROP SCHEMA IF EXISTS `musical_pursuit`";
             stmt.executeUpdate(drop);
 
-            String createDB = "CREATE DATABASE `musical_pursuit_db`";
+            String createDB = "CREATE IF NOT EXISTS DATABASE `musical_pursuit`";
             stmt.executeUpdate(createDB);
 
         } catch (SQLException se) {

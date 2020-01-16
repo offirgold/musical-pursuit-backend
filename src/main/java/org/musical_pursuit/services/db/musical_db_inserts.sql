@@ -1,12 +1,17 @@
 use `musical_pursuit`;
+LOAD DATA INFILE  'SongCSV.csv' INTO TABLE `data`
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
+IGNORE 1 ROWS;
 
--- insert a new album
--- 		name: "Such a good album"
---		id: 8
---  another one
---		name: "Such a good album 2"
---		id: 9
+INSERT INTO `songs` ( `song_id`, `year`, `title`, `artist_id`)
+SELECT  `song_id`, `year`, `title`, `artist_id`
+FROM  `data`
+WHERE NOT (`year`= 0);
 
-INSERT INTO `albums`(`id`, `name`)
-VALUES  (8, "Such a good album"),
-		(9, "Such a good album 2");
+INSERT INTO `artists` (`name`, `id`)
+SELECT  `name`, `artist_id`
+FROM  `data`
+-- GROUP BY `name`, `artist_id`
+-- HAVING COUNT(*) = 1;
