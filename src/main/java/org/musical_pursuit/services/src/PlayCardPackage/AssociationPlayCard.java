@@ -2,6 +2,7 @@ package org.musical_pursuit.services.src.PlayCardPackage;
 
 import java.util.HashMap;
 
+// A lighting round type playcard with a set of options and an array of strings the relate to one of the options.
 public class AssociationPlayCard implements IPlayCard{
 
     private String question = "Choose the band that released the following songs.";

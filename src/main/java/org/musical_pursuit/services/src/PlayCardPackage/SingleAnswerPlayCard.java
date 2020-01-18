@@ -1,5 +1,6 @@
 package org.musical_pursuit.services.src.PlayCardPackage;
 
+// A basic multiple choice playcard with a single correct answer commonly named "american question".
 public class SingleAnswerPlayCard implements IPlayCard{
 
     private String question;

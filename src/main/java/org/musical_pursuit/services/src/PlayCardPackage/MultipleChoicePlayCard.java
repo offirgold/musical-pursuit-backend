@@ -1,5 +1,6 @@
 package org.musical_pursuit.services.src.PlayCardPackage;
 
+// A playcard with multiple correct answers to a given question, where the player attempts to find them all.
 public class MultipleChoicePlayCard implements IPlayCard{
 
     private String question;
