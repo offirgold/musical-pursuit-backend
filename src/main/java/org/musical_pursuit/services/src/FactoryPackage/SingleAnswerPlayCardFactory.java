@@ -23,7 +23,10 @@ public class SingleAnswerPlayCardFactory implements IPlayCardFactory{
         this.jdbc = jdbc;
     }
 
-
+    /**
+     * The function creates a playcard using jdbc.
+     * @return the playcard that it created.
+     */
     @Override
     public IPlayCard CreatePlayCard() {
 
