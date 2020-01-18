@@ -45,8 +45,6 @@ public class MusicalPursuitApplication {
         String[] result = new String[gameLength];
 
         for (int i = 0; i < gameLength; ++i) {
-//            Callable<IPlayCard> thread = new MyThread(singleAnswerPlayCardFactory);
-//            singleArray[i] = executor.submit(thread);
             fullGame[i] = singleAnswerPlayCardFactory.CreatePlayCard();
         }
 
