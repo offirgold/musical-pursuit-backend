@@ -62,7 +62,7 @@ public class MusicalPursuitApplication {
 
     @POST
     @Path("/submitScore")
-    public Response receiveHello(@FormParam("name") String id, @FormParam("name") String name, @FormParam("score") int score) {
+    public Response receiveHello(@FormParam("id") String id, @FormParam("name") String name, @FormParam("score") int score) {
 
         jdbc.insertNewPlayer(id, name, score);
 
