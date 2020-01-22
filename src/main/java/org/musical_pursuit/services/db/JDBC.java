@@ -36,7 +36,7 @@ public class JDBC {
         while(this.conn == null){
             try {
                 this.openConnection("/Users/davidgoldberg/IdeaProjects/musical_pursuit_backend/src/main/resources/application.properties");
-//                this.openConnection("C:\\Users\\David\\application.properties");
+//                this.openConnection("C:\\Users\\User\\Desktop\\application.properties");
             } catch (NullJdbcException e){
                 System.out.println(e.getMessage());
             }
