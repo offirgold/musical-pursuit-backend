@@ -6,7 +6,6 @@ import org.musical_pursuit.services.src.PlayCardPackage.SingleAnswerPlayCard;
 import org.musical_pursuit.services.src.objects.Artist;
 import org.musical_pursuit.services.src.objects.Song;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -78,16 +77,18 @@ public class SingleAnswerPlayCardFactory implements IPlayCardFactory{
             }
 
             options[correctPosition] = correctAnswer;
+            int incorrectIndex = 0;
 
             switch (about) {
 
                 case 0:
-                    for (int i = 0; i < totalOptionsNum - 1; ++i) {
+                    for (int i = 0; i < totalOptionsNum; ++i) {
                         if (i == correctPosition) {
                             continue;
                         }
                         try {
-                            options[i] = incorrect.get(i).getTitle();
+                            options[i] = incorrect.get(incorrectIndex).getTitle();
+                            ++incorrectIndex;
                         } catch (NullPointerException e) {
                             restartLoop = true;
                             break;
@@ -99,12 +100,13 @@ public class SingleAnswerPlayCardFactory implements IPlayCardFactory{
                     break;
 
                 case 1:
-                    for (int i = 0; i < totalOptionsNum - 1; ++i) {
+                    for (int i = 0; i < totalOptionsNum; ++i) {
                         if (i == correctPosition) {
                             continue;
                         }
                         try {
-                            options[i] = incorrect.get(i).getArtist().getArtistName();
+                            options[i] = incorrect.get(incorrectIndex).getArtist().getArtistName();
+                            ++incorrectIndex;
                         } catch (NullPointerException e) {
                             restartLoop = true;
                             break;

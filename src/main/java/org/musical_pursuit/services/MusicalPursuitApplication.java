@@ -2,8 +2,6 @@ package org.musical_pursuit.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.musical_pursuit.services.db.JDBC;
-import org.musical_pursuit.services.src.FactoryPackage.AssociationPlayCardFactory;
-import org.musical_pursuit.services.src.FactoryPackage.MultipleChoicePlayCardFactory;
 import org.musical_pursuit.services.src.FactoryPackage.SingleAnswerPlayCardFactory;
 
 import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
@@ -12,8 +10,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-
-import org.musical_pursuit.services.src.PlayCardPackage.SingleAnswerPlayCard;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package com.example.dbcourse.Musical_Pursuit.db;
+package org.musical_pursuit.services.db;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

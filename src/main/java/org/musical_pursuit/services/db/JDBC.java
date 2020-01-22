@@ -6,11 +6,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.musical_pursuit.services.src.objects.Song;
 import org.musical_pursuit.services.src.objects.Artist;
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
+import org.musical_pursuit.services.CustomExceptions.NullJdbcException;
+import sun.lwawt.macosx.CSystemTray;
 
 /**
  * this class will create our db tables and fill them in from the csv file using SQL queries.
@@ -24,17 +30,24 @@ public class JDBC {
     /**
      * constructor
      */
-    public JDBC() {
+    public JDBC(){
         this.conn = null;
-        //open connection on cunstruction
-        this.openConnection("/Users/AmitAshkenazi/IdeaProjects/musical-pursuit-backend/src/main/resources/application.properties");
+        //open connection on construction
+        while(this.conn == null){
+            try {
+                this.openConnection("/Users/davidgoldberg/IdeaProjects/musical_pursuit_backend/src/main/resources/application.properties");
+//                this.openConnection("C:\\Users\\David\\application.properties");
+            } catch (NullJdbcException e){
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     /**
      * @return true if the connection was successfully set
      */
     /*TODO: here config file connection details*/
-    public Connection openConnection(String configFileName /*"src/main/resources/application.properties"*/) {
+    public Connection openConnection(String configFileName /*"src/main/resources/application.properties"*/) throws NullJdbcException {
 
         String host = "";
         String port = "";
@@ -64,10 +77,11 @@ public class JDBC {
         }
 
         try {
-//            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+            Class.forName("com.mysql.cj.jdbc.Driver");
+//          DriverManager.registerDriver(new com.mysql.jdbc.Driver());
             conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + schema
                     /*+ "?serverTimezone=UTC"*/, user, password);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Unable to connect - " + e.getMessage());
             return null;
         }

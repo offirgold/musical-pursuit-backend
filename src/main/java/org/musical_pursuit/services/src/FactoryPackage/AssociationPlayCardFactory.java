@@ -1,11 +1,9 @@
 package org.musical_pursuit.services.src.FactoryPackage;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.musical_pursuit.services.db.JDBC;
 import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
-import org.musical_pursuit.services.src.objects.Song;
 
 
 public class AssociationPlayCardFactory implements IPlayCardFactory{
