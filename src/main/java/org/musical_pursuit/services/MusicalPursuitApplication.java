@@ -8,9 +8,7 @@ import org.musical_pursuit.services.src.FactoryPackage.SingleAnswerPlayCardFacto
 
 import org.musical_pursuit.services.src.PlayCardPackage.IPlayCard;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 import org.musical_pursuit.services.src.PlayCardPackage.SingleAnswerPlayCard;
@@ -23,7 +21,6 @@ public class MusicalPursuitApplication {
 
     int gameLength = 5;
     JDBC jdbc = new JDBC();
-    SingleAnswerPlayCardFactory singleAnswerPlayCardFactory = new SingleAnswerPlayCardFactory(jdbc);
 
 
 //    @Path("/MainMenu")
@@ -39,6 +36,7 @@ public class MusicalPursuitApplication {
 //    @Produces(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public Response getFullGame() {
+        SingleAnswerPlayCardFactory singleAnswerPlayCardFactory = new SingleAnswerPlayCardFactory(jdbc);
 
         ObjectMapper mapper = new ObjectMapper();
         IPlayCard[] fullGame = new IPlayCard[gameLength];
@@ -60,5 +58,14 @@ public class MusicalPursuitApplication {
                 .status(Response.Status.OK)
                 .entity(Arrays.toString(result))
                 .build();
+    }
+
+    @POST
+    @Path("/submitScore")
+    public Response receiveHello(@FormParam("name") String id, @FormParam("name") String name, @FormParam("score") int score) {
+
+        jdbc.insertNewPlayer(id, name, score);
+
+        return Response.status(200).build();
     }
 }
